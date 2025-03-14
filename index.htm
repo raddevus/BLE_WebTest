@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bluetooth Example</title>
+</head>
+<body>
+    <button id="connect">Connect to Bluetooth Device</button>
+    <button id="send">Send "Hello, World"</button>
+
+    <script>
+        let bluetoothDevice;
+        let characteristic;
+
+        document.getElementById('connect').addEventListener('click', async () => {
+            try {
+                console.log('Requesting Bluetooth device...');
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['0000ffe0-0000-1000-8000-00805f9b34fb'] // Replace with your device's service UUID
+                });
+
+                console.log('Connecting to GATT Server...');
+                const server = await bluetoothDevice.gatt.connect();
+
+                console.log('Getting Service...');
+                const service = await server.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb'); // Replace with your device's service UUID
+
+                console.log('Getting Characteristic...');
+                characteristic = await service.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb'); // Replace with your characteristic UUID
+
+                console.log('Connected successfully!');
+                alert('Connected to Bluetooth device!');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to connect: ' + error.message);
+            }
+        });
+
+        document.getElementById('send').addEventListener('click', async () => {
+            if (!characteristic) {
+                alert('You need to connect to a Bluetooth device first!');
+                return;
+            }
+
+            try {
+                console.log('Sending "Hello, World"...');
+                const encoder = new TextEncoder();
+                const data = encoder.encode('Hello, World');
+                await characteristic.writeValue(data);
+
+                console.log('Message sent!');
+                alert('"Hello, World" sent successfully!');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to send data: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
+
