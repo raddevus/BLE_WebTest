@@ -10,23 +10,24 @@
     <script>
         let bluetoothDevice;
         let characteristic;
-
+        let serviceUUID = "EBC0FCC1-2FC3-44B7-94A8-A08D0A0A5079";
+        let servCharacteristic = "C1AB2C55-7914-4140-B85B-879C5E252FE5";
         document.getElementById('connect').addEventListener('click', async () => {
             try {
                 console.log('Requesting Bluetooth device...');
                 bluetoothDevice = await navigator.bluetooth.requestDevice({
                     acceptAllDevices: true,
-                    optionalServices: ['0000ffe0-0000-1000-8000-00805f9b34fb'] // Replace with your device's service UUID
+                    optionalServices: [serviceUUID] // Replace with your device's service UUID
                 });
 
                 console.log('Connecting to GATT Server...');
                 const server = await bluetoothDevice.gatt.connect();
 
                 console.log('Getting Service...');
-                const service = await server.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb'); // Replace with your device's service UUID
+                const service = await server.getPrimaryService(serviceUUID); // Replace with your device's service UUID
 
                 console.log('Getting Characteristic...');
-                characteristic = await service.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb'); // Replace with your characteristic UUID
+                characteristic = await service.getCharacteristic(servCharacteristic); // Replace with your characteristic UUID
 
                 console.log('Connected successfully!');
                 alert('Connected to Bluetooth device!');
