@@ -10,8 +10,13 @@
     <script>
         let bluetoothDevice;
         let characteristic;
-        let serviceUUID = "EBC0FCC1-2FC3-44B7-94A8-A08D0A0A5079";
-        let servCharacteristic = "C1AB2C55-7914-4140-B85B-879C5E252FE5";
+
+        // Oddly enough - services & characteristics MUST be defined with LOWERCASE chars
+        // EVEN though the real value on the DEVICE is UPPERCASE chars. Strange!
+        let serviceUUID = "ebc0fcc1-2fc3-44b7-94a8-a08d0a0a5079";
+
+        let servCharacteristic = "622b2c55-7914-4140-b85b-879c5e252da0";
+
         document.getElementById('connect').addEventListener('click', async () => {
             try {
                 console.log('Requesting Bluetooth device...');
@@ -32,7 +37,7 @@
                 console.log('Connected successfully!');
                 alert('Connected to Bluetooth device!');
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error:', error.message);
                 alert('Failed to connect: ' + error.message);
             }
         });
